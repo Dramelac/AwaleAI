@@ -14,6 +14,8 @@ class AIPlayer(PlayerBase):
             if self.id > 0:
                 pos_tmp = (len(self.board) // 2) - pos - 1
                 pos_tmp += len(self.board) // 2
+            else:
+                pos_tmp = pos
             maxScore[pos] = awale_play(pos_tmp, list(self.board), self.id)
 
         best_pos, best_score = -1, -1
