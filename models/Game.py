@@ -54,6 +54,10 @@ class Game:
                     if sum(self.board[6:]) == 0:
                         pos = self.playerA.safe_choose()
                         safe_mode = True
+                    elif sum(self.board[:6]) == 0:
+                        self.playerB.score += sum(self.board[6:])
+                        self.final()
+                        return
                     else:
                         pos = self.playerA.choice()
                 else:
@@ -61,6 +65,10 @@ class Game:
                     if sum(self.board[:6]) == 0:
                         pos = self.playerB.safe_choose()
                         safe_mode = True
+                    elif sum(self.board[6:]) == 0:
+                        self.playerA.score += sum(self.board[:6])
+                        self.final()
+                        return
                     else:
                         pos = self.playerB.choice()
                     pos = (len(self.board) // 2) - pos - 1
