@@ -1,5 +1,6 @@
 from models.AIPlayer import AIPlayer
 from models.Player import Player
+from tools.awale import awale_play
 from tools.input_methods import confirm
 
 
@@ -14,13 +15,13 @@ class Game:
         if confirm("Is player 1 a human ?"):
             self.playerA = Player()
         else:
-            self.playerA = AIPlayer(self.board, 1)
+            self.playerA = AIPlayer(self.board, 0)
 
         # test if player 2 machine
         if confirm("Is player 2 a human ?", "N"):
             self.playerB = Player()
         else:
-            self.playerB = AIPlayer(self.board, 2)
+            self.playerB = AIPlayer(self.board, 1)
 
     def display(self):
         print(" " * 11, end='| ')
@@ -43,41 +44,25 @@ class Game:
         running = True
         self.round = 0
         while running:
+            print()
             self.display()
             if self.round % 2 == 0:
                 print("Player 1 turn:")
-                pos = self.__MiniMax()
-                #pos = self.playerA.choice()
+                pos = self.playerA.choice()
             else:
                 print("Player 2 turn:")
                 pos = self.playerB.choice()
                 pos = (len(self.board) // 2) - pos - 1
                 pos += len(self.board) // 2
             if self.__isPossible(pos):
-                self.__play(pos)
+                score = awale_play(pos, self.board, self.round)
+                self.get_current_player().score += score
                 if self.get_current_player().score >= 25:
                     print("YOU WIN !")
+                    return
                 self.round += 1
             else:
                 print("Incorrect selection")
-
-    def __play(self, pos):
-        distribute = self.board[pos]
-        current_pos = pos
-        self.board[pos] = 0
-        for i in range(1, distribute + 1):
-            # Apply point
-            current_pos = (pos + i) % len(self.board)
-            self.board[current_pos] += 1
-
-        scoring = True
-        while scoring:
-            if self.__is_enemie_zone(current_pos) and 2 <= self.board[current_pos] <= 3:
-                self.get_current_player().score += self.board[current_pos]
-                self.board[current_pos] = 0
-                current_pos -= 1
-            else:
-                scoring = False
 
     def get_current_player(self):
         if self.round % 2 == 0:
@@ -86,14 +71,6 @@ class Game:
         else:
             # Player 2 - selecting enemies range
             return self.playerB
-
-    def __is_enemie_zone(self, pos):
-        if self.round % 2 == 0:
-            # Player 1 - selecting enemies range
-            return 6 <= pos < len(self.board)
-        else:
-            # Player 2 - selecting enemies range
-            return 0 <= pos < 6
 
     def __isPossible(self, pos):
         if self.round % 2 == 1:
@@ -109,35 +86,3 @@ class Game:
         except IndexError:
             return False
         return False
-
-    def __MiniMax(self):
-
-        save = list(self.board)
-        maxScore = []
-        for pos in range (0,5):
-            distribute = self.board[pos]
-            current_pos = pos
-            self.board[pos] = 0
-            for i in range(1, distribute + 1):
-                # Apply point
-                current_pos = (pos + i) % len(self.board)
-                self.board[current_pos] += 1
-            scoring = True
-            while scoring:
-                if self.__is_enemie_zone(current_pos) and 2 <= self.board[current_pos] <= 3:
-                    maxScore.append(self.board[current_pos])
-                    self.board[current_pos] = 0
-                    current_pos -= 1
-                else:
-                    maxScore.append(0)
-                    scoring = False
-            self.board = list(save)
-
-        choice = maxScore.index(max(maxScore))
-        if (self.board[choice] != 0):
-            return  choice
-        else:
-            while (choice < 6):
-                choice += 1
-                if (self.board[choice] != 0):
-                    return choice
