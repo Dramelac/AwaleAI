@@ -7,20 +7,20 @@ class Game:
 
     def __init__(self):
         print("Welcome to AWALE !\n")
+        self.board = [4] * 12
+        self.round = 0
+
         # test if player 1 is machine
         if confirm("Is player 1 a human ?"):
             self.playerA = Player()
         else:
-            self.playerA = AIPlayer()
+            self.playerA = AIPlayer(self.board, 1)
 
         # test if player 2 machine
         if confirm("Is player 2 a human ?", "N"):
             self.playerB = Player()
         else:
-            self.playerB = AIPlayer()
-
-        self.board = [4] * 12
-        self.round = 0
+            self.playerB = AIPlayer(self.board, 2)
 
     def display(self):
         print(" " * 11, end='| ')
