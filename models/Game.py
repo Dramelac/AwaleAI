@@ -46,7 +46,8 @@ class Game:
             self.display()
             if self.round % 2 == 0:
                 print("Player 1 turn:")
-                pos = self.playerA.choice()
+                pos = self.__MiniMax()
+                #pos = self.playerA.choice()
             else:
                 print("Player 2 turn:")
                 pos = self.playerB.choice()
@@ -108,3 +109,35 @@ class Game:
         except IndexError:
             return False
         return False
+
+    def __MiniMax(self):
+
+        save = list(self.board)
+        maxScore = []
+        for pos in range (0,5):
+            distribute = self.board[pos]
+            current_pos = pos
+            self.board[pos] = 0
+            for i in range(1, distribute + 1):
+                # Apply point
+                current_pos = (pos + i) % len(self.board)
+                self.board[current_pos] += 1
+            scoring = True
+            while scoring:
+                if self.__is_enemie_zone(current_pos) and 2 <= self.board[current_pos] <= 3:
+                    maxScore.append(self.board[current_pos])
+                    self.board[current_pos] = 0
+                    current_pos -= 1
+                else:
+                    maxScore.append(0)
+                    scoring = False
+            self.board = list(save)
+
+        choice = maxScore.index(max(maxScore))
+        if (self.board[choice] != 0):
+            return  choice
+        else:
+            while (choice < 6):
+                choice += 1
+                if (self.board[choice] != 0):
+                    return choice
