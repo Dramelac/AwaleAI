@@ -38,7 +38,7 @@ class Game:
         for x in range(len(self.board) - 1, (len(self.board) // 2) - 1, -1):
             print(self.board[x], end=" | ")
         print("\n")
-        print("   Score     PlayerA:", self.playerA.get_score(), "- PlayerB", self.playerB.get_score(), "\n")
+        print("   Score     Player1:", self.playerA.get_score(), "- Player2", self.playerB.get_score(), "\n")
 
     def start(self):
         running = True
@@ -66,7 +66,7 @@ class Game:
                     pos = (len(self.board) // 2) - pos - 1
                     pos += len(self.board) // 2
             except NoMoreOption:
-                print("YOU LOOSE !")
+                self.final()
                 return
 
             if (safe_mode and self.__is_safe_possible(pos)) or \
@@ -74,7 +74,7 @@ class Game:
                 score = awale_play(pos, self.board, self.round)
                 self.get_current_player().score += score
                 if self.get_current_player().score >= 25:
-                    print("YOU WIN !")
+                    self.final()
                     return
                 self.round += 1
             else:
@@ -106,3 +106,12 @@ class Game:
         except IndexError:
             return False
         return False
+
+    def final(self):
+        print("\nGame Over !")
+        if self.playerA.score > self.playerB.score:
+            print("Player 1 WIN !")
+        elif self.playerA.score < self.playerB.score:
+            print("Player 2 WIN !")
+        else:
+            print("EGALITE")
