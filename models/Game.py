@@ -38,15 +38,15 @@ class Game:
         for x in range(len(self.board) - 1, (len(self.board) // 2) - 1, -1):
             print(self.board[x], end=" | ")
         print("\n")
-        print("   Score     Player1:", self.playerA.get_score(), "- Player2", self.playerB.get_score(), "\n")
+        print("   Score   Player1:", self.playerA.get_score(), "- Player2:", self.playerB.get_score(), "\n")
 
     def start(self):
         running = True
         self.round = 0
+        print()
+        self.display()
         while running:
             safe_mode = False
-            print()
-            self.display()
 
             try:
                 if self.round % 2 == 0:
@@ -73,9 +73,14 @@ class Game:
                     (not safe_mode and self.__isPossible(pos)):
                 score = awale_play(pos, self.board, self.round)
                 self.get_current_player().score += score
-                if self.get_current_player().score >= 25:
+
+                print()
+                self.display()
+
+                if self.get_current_player().score >= 25 or sum(self.board) <= 3:
                     self.final()
                     return
+
                 self.round += 1
             else:
                 print("Incorrect selection")
