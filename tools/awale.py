@@ -26,3 +26,7 @@ def check_enemy_zone(pos, game_round, size=12):
     else:
         # Player 2 - selecting enemies range
         return 0 <= pos < size // 2
+
+
+class NoMoreOption(Exception):
+    pass

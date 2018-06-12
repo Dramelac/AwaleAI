@@ -19,3 +19,7 @@ class Player(PlayerBase):
                 exit(0)
             except Exception:
                 print("Not a number !")
+
+    def safe_choose(self):
+        print("/!\\ You have a gave a point to your adversary")
+        return self.choice()

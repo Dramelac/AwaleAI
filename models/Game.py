@@ -1,6 +1,6 @@
 from models.AIPlayer import AIPlayer
 from models.Player import Player
-from tools.awale import awale_play
+from tools.awale import awale_play, NoMoreOption
 from tools.input_methods import confirm
 
 
@@ -44,17 +44,33 @@ class Game:
         running = True
         self.round = 0
         while running:
+            safe_mode = False
             print()
             self.display()
-            if self.round % 2 == 0:
-                print("Player 1 turn:")
-                pos = self.playerA.choice()
-            else:
-                print("Player 2 turn:")
-                pos = self.playerB.choice()
-                pos = (len(self.board) // 2) - pos - 1
-                pos += len(self.board) // 2
-            if self.__isPossible(pos):
+
+            try:
+                if self.round % 2 == 0:
+                    print("Player 1 turn:")
+                    if sum(self.board[6:]) == 0:
+                        pos = self.playerA.safe_choose()
+                        safe_mode = True
+                    else:
+                        pos = self.playerA.choice()
+                else:
+                    print("Player 2 turn:")
+                    if sum(self.board[:6]) == 0:
+                        pos = self.playerB.safe_choose()
+                        safe_mode = True
+                    else:
+                        pos = self.playerB.choice()
+                    pos = (len(self.board) // 2) - pos - 1
+                    pos += len(self.board) // 2
+            except NoMoreOption:
+                print("YOU LOOSE !")
+                return
+
+            if (safe_mode and self.__is_safe_possible(pos)) or \
+                    (not safe_mode and self.__isPossible(pos)):
                 score = awale_play(pos, self.board, self.round)
                 self.get_current_player().score += score
                 if self.get_current_player().score >= 25:
@@ -71,6 +87,10 @@ class Game:
         else:
             # Player 2 - selecting enemies range
             return self.playerB
+
+    def __is_safe_possible(self, pos):
+        return self.__isPossible(pos) and (pos%6)+self.board[pos] >= 6
+        # check_enemy_zone(pos + self.board[pos] % len(self.board), self.round)
 
     def __isPossible(self, pos):
         if self.round % 2 == 1:

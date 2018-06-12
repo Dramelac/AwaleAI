@@ -8,3 +8,6 @@ class PlayerBase:
 
     def choice(self):
         raise NotImplementedError
+
+    def safe_choose(self):
+        raise NotImplementedError
