@@ -122,7 +122,7 @@ class Game:
 
     def final(self):
         print("\nGame Over !")
-        self.recalculscrore()
+        self.recalculscore()
         if self.playerA.score > self.playerB.score:
             print("Player 1 WIN !")
         elif self.playerA.score < self.playerB.score:
