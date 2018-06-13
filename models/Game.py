@@ -78,7 +78,7 @@ class Game:
                 return
 
             if (safe_mode and self.__is_safe_possible(pos)) or \
-                    (not safe_mode and self.__isPossible(pos)):
+                    (not safe_mode and self.__is_possible(pos)):
                 score = awale_play(pos, self.board, self.round)
                 self.get_current_player().score += score
 
@@ -102,10 +102,10 @@ class Game:
             return self.playerB
 
     def __is_safe_possible(self, pos):
-        return self.__isPossible(pos) and (pos%6)+self.board[pos] >= 6
+        return self.__is_possible(pos) and (pos % 6) + self.board[pos] >= 6
         # check_enemy_zone(pos + self.board[pos] % len(self.board), self.round)
 
-    def __isPossible(self, pos):
+    def __is_possible(self, pos):
         if self.round % 2 == 1:
             if pos < len(self.board) // 2 or pos > len(self.board):
                 return False
@@ -123,6 +123,8 @@ class Game:
     def final(self):
         print("\nGame Over !")
         self.recalculscore()
+        print("Player 1:", self.playerA.score)
+        print("Player 2:", self.playerB.score)
         if self.playerA.score > self.playerB.score:
             print("Player 1 WIN !")
         elif self.playerA.score < self.playerB.score:
@@ -131,10 +133,5 @@ class Game:
             print("EGALITE")
 
     def recalculscore(self):
-        for case in range(0, 6):
-            if self.playerA.board[case] != 0:
-                self.playerA.score += self.playerA.board[case]
-
-        for case in range(6, 12):
-            if self.playerB.board[case] != 0:
-                self.playerB.score += self.playerB.board[case]
+        self.playerA.score += sum(self.board[:6])
+        self.playerB.score += sum(self.board[6:])
