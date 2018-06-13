@@ -21,5 +21,5 @@ class Player(PlayerBase):
                 print("Not a number !")
 
     def safe_choose(self):
-        print("/!\\ You have a gave a point to your adversary")
+        print("/!\\ You have to give a point to your adversary")
         return self.choice()

@@ -1,3 +1,4 @@
+import random
 from models.PlayerBase import PlayerBase
 from tools.awale import awale_play, NoMoreOption
 
@@ -22,6 +23,12 @@ class AIPlayer(PlayerBase):
             if score > best_score and self.board[pos_check] != 0:
                 best_pos = pos_tmp
                 best_score = score
+
+            elif score == best_score and self.board[pos_check] != 0:
+                if random.randint(1, 2) == 1:
+                    best_pos = pos_tmp
+                    best_score = score
+
 
         if best_pos == -1:
             raise NoMoreOption
