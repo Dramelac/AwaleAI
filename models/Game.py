@@ -122,9 +122,19 @@ class Game:
 
     def final(self):
         print("\nGame Over !")
+        self.recalculscrore()
         if self.playerA.score > self.playerB.score:
             print("Player 1 WIN !")
         elif self.playerA.score < self.playerB.score:
             print("Player 2 WIN !")
         else:
             print("EGALITE")
+
+    def recalculscore(self):
+        for case in range(0, 6):
+            if self.playerA.board[case] != 0:
+                self.playerA.score += self.playerA.board[case]
+
+        for case in range(6, 12):
+            if self.playerB.board[case] != 0:
+                self.playerB.score += self.playerB.board[case]
